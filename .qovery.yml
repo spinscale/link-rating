@@ -5,6 +5,9 @@ application:
   publicly_accessible: true
 routers:
 - name: main
+  custom_domains:
+  - branch: master
+    domain: linkrating.spinscale.de
   routes:
   - application_name: link-rating
     paths:
