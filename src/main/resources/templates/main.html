@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=Edge">
+  <title>Elastic Community Link Collector</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-exp.min.css">
+  <link rel="stylesheet" href="https://unpkg.com/spectre.css/dist/spectre-icons.min.css">
+</head>
+
+<body>
+
+<div class="container mt-2 pt-2">
+  <header class="navbar">
+    <section class="navbar-section">
+      <a href="/"><img src="/img/elastic-logo.svg" alt="Elastic Logo" style="height: 36px;"></a>
+    </section>
+    <section class="navbar-section" th:if="${user}">
+      <a style="cursor: pointer" onclick="document.getElementById('modal').classList.add('active')">Submit Link</a>
+    </section>
+    <section class="navbar-section">
+      <a th:unless="${user}" href="/oauth2/authorization/github" class="btn btn-link">Login</a>
+      <form method="post" action="/logout" th:if="${user}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+        <input type="submit" class="btn btn-link"  value="Logout"/>
+      </form>
+      <figure class="avatar tooltip tooltip-left" th:data-tooltip="${'Logged in as ' + user.getAttribute('login')}" th:if="${user != null && user.getAttribute('avatar_url') != null}"><img th:src="${user.getAttribute('avatar_url')}"></figure>
+    </section>
+  </header>
+</div>
+
+<div class="container text-center mt-2 pt-2">
+  <div class="columns">
+    <div class="column col-3"></div>
+    <div class="column col-6">
+      <form action="/" method="get" >
+      <div class="input-group input-inline">
+        <input class="form-input input-xs" type="text" name="q" placeholder="search" style="width: 20em;">
+        <button class="btn btn-primary input-group-btn">Search</button>
+      </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="divider" style="margin-top: 1em; padding-bottom: 1em"></div>
+
+
+<div class="container grid-md mt-2 pt-2">
+
+  <h1 th:if="${#lists.isEmpty(links)}">No results found for <code class="text-error" th:text="*{q}"></code></h1>
+
+  <div th:each="link : ${links}">
+  <div class="columns">
+    <div class="column col-1">
+      <img th:src="@{${'/img/' + link.category + '.png'}}" style="height: 4em" class="p-centered">
+    </div>
+    <div class="column col-1" th:if="${user}">
+      <form method="post" th:action="${'/link/' + link.id + '/vote'}" th:if="${user}">
+        <button type="submit" class="btn btn-sm s-circle tooltip tooltip-top p-centered" data-tooltip="Vote up!"><i class="icon icon-arrow-up"></i></button>
+      </form>
+      <form method="post" th:action="${'/link/' + link.id + '/delete'}" th:if="${is_admin && link.approved}">
+        <button type="submit" class="btn btn-action btn-sm submit s-circle tooltip tooltip-top p-centered mt-2" data-tooltip="Delete Link!"><i class="icon icon-delete error text-error mx-1"></i></button>
+      </form>
+      <form method="post" th:action="${'/link/' + link.id + '/approve'}" th:if="${is_admin && !link.approved}">
+        <button type="submit" class="btn btn-action btn-sm submit s-circle tooltip tooltip-top p-centered mt-2" data-tooltip="Approve Link!"><i class="icon icon-check error text-success mx-1"></i></button>
+      </form>
+    </div>
+    <div class="column col-10 float-left">
+      <div class="columns">
+        <div class="column col-12"><a th:href="*{link.url}" th:text="*{link.title}"></a></div>
+      </div>
+      <div class="columns">
+        <div class="column col-2"><span th:text="*{link.votes + ' votes'}"></span></div>
+        <div class="column col-9 text-gray" th:text="*{link.ago}"></div>
+        <div class="column col-1">
+          <a th:href="*{'/link/' + link.id}" class="tooltip tooltip-top" data-tooltip="Shareable Link!"><i class="icon icon-link mx-1"></i></a>
+        </div>
+      </div>
+      <!--
+      <div class="columns">
+        <div class="col-12">
+          <span class="chip bg-secondary">Indexing</span>
+          <span class="chip bg-secondary">Administration</span>
+        </div>
+      </div>
+      -->
+      <div class="columns">
+        <div class="column col-12"><small class="tile-subtitle text-gray" th:text="*{link.description}"></small></div>
+      </div>
+    </div>
+  </div>
+  <div class="divider" style="padding-bottom: 0.5em"></div>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <a class="modal-overlay" aria-label="Close" ></a>
+  <div class="modal-container">
+    <div class="modal-header">
+      <a href="#close" class="btn btn-clear float-right" aria-label="Close" onclick="document.getElementById('modal').classList.remove('active')"></a>
+      <div class="modal-title h5">Submit new link</div>
+    </div>
+    <div class="modal-body">
+      <div class="content">
+        <form method="post" action="/link">
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+          <div class="form-group">
+            <div class="form-group"><label class="form-label">URL</label><input class="form-input" type="url" placeholder="Name" name="url" /></div>
+            <div class="form-group"><label class="form-label">Title</label><input class="form-input" type="text" placeholder="Name" name="title" /></div>
+            <div class="form-group">
+              <label class="form-label">Category</label>
+              <select class="form-select" name="category">
+                <option>Elasticsearch</option>
+                <option>Kibana</option>
+                <option>Beats</option>
+                <option>Logstash</option>
+                <option>Cloud</option>
+              </select>
+            </div>
+            <div class="form-group"><label class="form-label">Description</label><textarea class="form-input" type="text" placeholder="Name" name="description" rows="3"></textarea></div>
+          </div>
+          <input type="submit" class="btn btn-primary" value="Send!"/>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+
+</html>
