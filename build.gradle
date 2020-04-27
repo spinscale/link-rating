@@ -21,12 +21,12 @@ configurations {
 }
 
 dependencies {
-//	implementation 'org.springframework.boot:spring-boot-starter-data'
 	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
 	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 	implementation 'co.elastic.logging:logback-ecs-encoder:0.3.0'
+	implementation 'co.elastic.apm:apm-agent-attach:1.15.0'
 
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
