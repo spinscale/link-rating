@@ -6,6 +6,8 @@ collect Links and display them based on rating and age.
 The intention of this app is to be able to run it yourself locally and play
 around with Elasticsearch and its scoring.
 
+You can check out the application at https://linkrating.spinscale.de/
+
 ## Requirements
 
 You need to create a github oauth app. You can do so at
