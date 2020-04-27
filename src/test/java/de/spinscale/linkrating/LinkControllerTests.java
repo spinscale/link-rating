@@ -127,6 +127,17 @@ public class LinkControllerTests {
     }
 
     @Test
+    public void testUserCannotSubmitMoreThanTenLinks() {
+        when(elasticsearchOperations.count(any(), eq(Link.class))).thenReturn(11L);
+        OAuth2User principal = createUser("user");
+
+        String result = controller.submitLink(principal, "description", "<b>Title</b>", "http://example.org", "Category");
+
+        assertThat(result).isEqualTo("redirect:/");
+        verify(elasticsearchOperations, never()).save(any(Link.class));
+    }
+
+    @Test
     public void testDeleteAsAdmin() {
         String result = controller.delete(createUser("admin"), "123");
         assertThat(result).isEqualTo("redirect:/");

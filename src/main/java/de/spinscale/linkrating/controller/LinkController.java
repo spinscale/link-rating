@@ -3,8 +3,8 @@ package de.spinscale.linkrating.controller;
 import de.spinscale.linkrating.AdminService;
 import de.spinscale.linkrating.entity.Link;
 import de.spinscale.linkrating.entity.User;
-import org.apache.lucene.analysis.charfilter.HTMLStripCharFilter;
 import org.elasticsearch.common.inject.Inject;
+import org.elasticsearch.index.query.BoolQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.TermQueryBuilder;
 import org.slf4j.Logger;
@@ -28,12 +28,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Locale;
-import java.util.Objects;
 
 @Controller
 @RequestMapping(path = "/link")
@@ -67,7 +63,7 @@ public class LinkController extends BaseController {
     }
 
 
-    @PostMapping()
+    @PostMapping
     public String submitLink(@AuthenticationPrincipal final OAuth2User principal,
                              @RequestParam("description") final String description,
                              @RequestParam("title") final String title,
@@ -77,16 +73,22 @@ public class LinkController extends BaseController {
         final TermQueryBuilder qb = QueryBuilders.termQuery("url", url);
         final SearchHit<Link> hit = elasticsearchRestTemplate.searchOne(new NativeSearchQuery(qb), Link.class);
         if (hit == null) {
-            Link link = new Link();
-            link.setCreatedAt(new Date());
-            link.setDescription(description);
-            link.setTitle(title);
-            link.setUrl(url);
-            link.setCategory(category);
-            link.setVotes(1L);
-            link.setApproved(false);
-            link.setSubmittedBy(principal.getAttribute("login"));
-            elasticsearchRestTemplate.save(link);
+            final BoolQueryBuilder boolQueryBuilder = QueryBuilders.boolQuery()
+                    .must(QueryBuilders.termQuery("submitted_by", principal.getAttribute("login")))
+                    .must(QueryBuilders.termQuery("approved", false));
+            final long linksSubmittedByUser = elasticsearchRestTemplate.count(new NativeSearchQuery(boolQueryBuilder), Link.class);
+            if (linksSubmittedByUser < 10) {
+                Link link = new Link();
+                link.setCreatedAt(new Date());
+                link.setDescription(description);
+                link.setTitle(title);
+                link.setUrl(url);
+                link.setCategory(category);
+                link.setVotes(1L);
+                link.setApproved(false);
+                link.setSubmittedBy(principal.getAttribute("login"));
+                elasticsearchRestTemplate.save(link);
+            }
         } else {
             if (hit.getContent().isApproved()) {
                 return "redirect:/link/" + hit.getContent().getId();

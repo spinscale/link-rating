@@ -85,6 +85,4 @@ been approved by an administrator user, who can visit the `/unapproved` URL.
 
 * Add java-ecs-logging
 * Add more logging once log data gets indexed into Elasticsearch
-* Limit the addition of new links, so that a single user cannot add more
-  than 10 links to prevent spamming
 
