@@ -24,6 +24,10 @@ required
 * `SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GITHUB_CLIENT_SECRET=...`
 * `ELASTICSEARCH_URL=https://user:password@your-elasticsearch-node:9200`
 * `ADMINS="spinscale,xeraa"`
+* `ELASTIC_APM_SERVICE_NAME=linkrating`
+* `ELASTIC_APM_SECRET_TOKEN=THE_SECRET_TOKEN` (optionally)
+* `ELASTIC_APM_SERVER_URLS=http://localhost:8200`
+* `ELASTIC_APM_ENVIRONMENT=dev` (only set it to `prod` when deploying)
 
 The `ADMINS` variable contains a list of github logins that are allowed to
 approve links, which brings us the app functionality.
@@ -77,7 +81,6 @@ been approved by an administrator user, who can visit the `/unapproved` URL.
 
 ## TODO
 
-* Add APM support
 * Add java-ecs-logging
 * Add more logging once log data gets indexed into Elasticsearch
 * Limit the addition of new links, so that a single user cannot add more
