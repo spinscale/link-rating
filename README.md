@@ -83,6 +83,5 @@ been approved by an administrator user, who can visit the `/unapproved` URL.
 
 ## TODO
 
-* Add java-ecs-logging
-* Add more logging once log data gets indexed into Elasticsearch
+* Add more verbose logging per endpoint once log data gets indexed into Elasticsearch
 
