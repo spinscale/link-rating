@@ -6,7 +6,7 @@ application:
 routers:
 - name: main
   custom_domains:
-  - branch: master
+  - branch: main
     domain: linkrating.spinscale.de
   routes:
   - application_name: link-rating
