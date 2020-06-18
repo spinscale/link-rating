@@ -35,7 +35,7 @@ import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Locale;
 
-@Document(indexName = "links", shards = 1, versionType = VersionType.INTERNAL)
+@Document(indexName = "links", shards = 1, versionType = VersionType.INTERNAL,  createIndex = false)
 public class Link {
 
     @Id

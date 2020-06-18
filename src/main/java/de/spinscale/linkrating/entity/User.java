@@ -25,7 +25,7 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 
 import java.util.List;
 
-@Document(indexName = "users", shards = 1, versionType = VersionType.INTERNAL)
+@Document(indexName = "users", shards = 1, versionType = VersionType.INTERNAL, createIndex = false)
 public class User {
 
     @Id
