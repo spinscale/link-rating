@@ -20,6 +20,7 @@ package de.spinscale.linkrating.entity;
 import org.apache.lucene.analysis.charfilter.HTMLStripCharFilter;
 import org.elasticsearch.index.VersionType;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.elasticsearch.annotations.DateFormat;
 import org.springframework.data.elasticsearch.annotations.Document;
 import org.springframework.data.elasticsearch.annotations.Field;
 import org.springframework.data.elasticsearch.annotations.FieldType;
@@ -54,7 +55,7 @@ public class Link {
     @Field(name="submitted_by", type = FieldType.Keyword)
     private String submittedBy;
 
-    @Field(name = "created_at", type=FieldType.Date)
+    @Field(name = "created_at", type=FieldType.Date, format = DateFormat.date_optional_time)
     private Date createdAt;
 
     @Field(type = FieldType.Boolean)
