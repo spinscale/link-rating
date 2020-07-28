@@ -1,10 +1,10 @@
-FROM gradle:6.3.0-jdk13 as build
+FROM gradle:6.5.1-jdk14 as build
 COPY --chown=gradle:gradle . /home/gradle/src
 WORKDIR /home/gradle/src
 RUN gradle build --no-daemon
 
 
-FROM openjdk:13-jdk-alpine
+FROM openjdk:14-jdk-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 WORKDIR /app
