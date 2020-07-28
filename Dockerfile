@@ -6,6 +6,7 @@ RUN gradle build --no-daemon
 
 FROM openjdk:14-jdk-alpine
 RUN addgroup -S spring && adduser -S spring -G spring
+VOLUME /tmp
 USER spring:spring
 WORKDIR /app
 ARG JAR_FILE=build/libs/*.jar
