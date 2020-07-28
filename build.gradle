@@ -1,7 +1,8 @@
 plugins {
-	id 'org.springframework.boot' version '2.3.2.RELEASE'
-	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
-	id 'java'
+  id 'org.springframework.boot' version '2.3.2.RELEASE'
+  id 'io.spring.dependency-management' version '1.0.9.RELEASE'
+  id "com.github.ben-manes.versions" version '0.29.0'
+  id 'java'
 }
 
 group = 'de.spinscale.linkrating.'
@@ -9,32 +10,32 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '14'
 
 repositories {
-	maven { url 'https://repo.spring.io/milestone' }
-	mavenCentral()
+  maven { url 'https://repo.spring.io/milestone' }
+  mavenCentral()
 }
 
 configurations {
-	developmentOnly
-	runtimeClasspath {
-		extendsFrom developmentOnly
-	}
+  developmentOnly
+  runtimeClasspath {
+    extendsFrom developmentOnly
+  }
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
-	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
-	implementation 'co.elastic.logging:logback-ecs-encoder:0.5.0'
-	implementation 'co.elastic.apm:apm-agent-attach:1.17.0'
+  implementation 'org.springframework.boot:spring-boot-starter-data-elasticsearch'
+  implementation 'org.springframework.boot:spring-boot-starter-web'
+  implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+  implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
+  implementation 'co.elastic.logging:logback-ecs-encoder:0.5.0'
+  implementation 'co.elastic.apm:apm-agent-attach:1.17.0'
 
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+  developmentOnly 'org.springframework.boot:spring-boot-devtools'
 
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+  testImplementation('org.springframework.boot:spring-boot-starter-test') {
+    exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
+  }
 }
 
 test {
-	useJUnitPlatform()
+  useJUnitPlatform()
 }
