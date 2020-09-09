@@ -80,8 +80,3 @@ been approved by an administrator user, who can visit the `/unapproved` URL.
 * [Thymeleaf](https://www.thymeleaf.org/) for server side rendering
 * [Spectre.css](https://picturepan2.github.io/spectre/) for anything CSS
 * [Elasticsearch](https://elastic.co) for storing and querying the data
-
-## TODO
-
-* Add more verbose logging per endpoint once log data gets indexed into Elasticsearch
-
